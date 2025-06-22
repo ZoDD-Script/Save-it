@@ -67,7 +67,7 @@ const Sidebar = ({
 
       <Image
         src="/assets/images/files-2.png"
-        alt="files logo"
+        alt="files"
         width={506}
         height={418}
         className="w-full"
