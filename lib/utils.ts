@@ -1,3 +1,4 @@
+import { FileType } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -115,8 +116,6 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 
   return `${time}, ${day} ${month}`;
 };
-
-type FileType = "document" | "image" | "video" | "audio" | "other";
 
 export const getFileIcon = (
   extension: string | undefined,
