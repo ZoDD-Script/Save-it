@@ -9,11 +9,12 @@
 // 6. Return the user's accountId that will be used to complete login
 // 7. Verify OTP and authenticate the user
 
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { ID, Query } from "node-appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { avatarPlaceHolderUrl } from "@/constants";
 
 const handleError = (error: unknown, message: string) => {
   console.log(`Error: ${message}`, error);
@@ -66,8 +67,7 @@ export const createAccount = async ({
       {
         fullName,
         email,
-        avatar:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fuser-avatar&psig=AOvVaw1gq5dXf7ZNYsfHQDFXBaDr&ust=1750595799029000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMizv9nDgo4DFQAAAAAdAAAAABAE",
+        avatar: avatarPlaceHolderUrl,
         accountId,
       }
     );
@@ -99,4 +99,20 @@ export const verifySecret = async ({
   } catch (error) {
     handleError(error, "Failed to verify OTP");
   }
+};
+
+export const getCurrentUser = async () => {
+  const { account, databases } = await createSessionClient();
+
+  const result = await account.get();
+
+  const user = await databases.listDocuments(
+    appwriteConfig.datebaseId,
+    appwriteConfig.usersCollectionId,
+    [Query.equal("accountId", result.$id)]
+  );
+
+  if (user.total <= 0) return null;
+
+  return parseStringify(user.documents[0]);
 };
