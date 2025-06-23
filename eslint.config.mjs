@@ -21,7 +21,7 @@ const eslintConfig = [
     rules: {
       "no-console": "warn",
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "tailwindcss/no-custom-classname": "off",
+      // "tailwindcss/no-custom-classname": "off",
       "no-undef": "off",
     },
   },
