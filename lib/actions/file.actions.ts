@@ -123,3 +123,33 @@ export const renameFile = async ({
     handleError(error, "Failed to rename file");
   }
 };
+
+export const deleteFile = async ({
+  fileId,
+  path,
+}: {
+  fileId: string;
+  path: string;
+}) => {
+  const { databases, storage } = await createAdminClient();
+
+  try {
+    const file = await databases.getDocument(
+      appwriteConfig.datebaseId,
+      appwriteConfig.filesCollectionId,
+      fileId
+    );
+
+    await databases.deleteDocument(
+      appwriteConfig.datebaseId,
+      appwriteConfig.filesCollectionId,
+      fileId
+    );
+
+    await storage.deleteFile(appwriteConfig.bucket, file.bucketFileId);
+
+    revalidatePath(path);
+  } catch (error) {
+    handleError(error, "Failed to delete file");
+  }
+};
