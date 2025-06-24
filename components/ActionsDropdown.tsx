@@ -24,9 +24,10 @@ import Link from "next/link";
 import { constructDownloadUrl } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { renameFile } from "@/lib/actions/file.actions";
+import { renameFile, updateFileUsers } from "@/lib/actions/file.actions";
 import { usePathname } from "next/navigation";
 import { FileDetails, ShareInput } from "./ActionsModalContent";
+import { toast } from "@/hooks/use-toast";
 
 const ActionsDropdown = ({ file }: { file: Models.Document }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +55,7 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
     const actions = {
       rename: () =>
         renameFile({ fileId: file.$id, name, extension: file.extension, path }),
-      share: () => console.log("message"),
+      share: () => updateFileUsers({ fileId: file.$id, emails, path }),
       delete: () => console.log("message"),
     };
 
@@ -65,7 +66,29 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
     setIsLoading(false);
   };
 
-  const handleRemoveUser = () => {};
+  const handleRemoveUser = async (email: string) => {
+    const updatedEmails = emails.filter((e) => e !== email);
+
+    const success = await updateFileUsers({
+      fileId: file.$id,
+      emails: updatedEmails,
+      path,
+    });
+
+    if (success) {
+      setEmails(updatedEmails);
+      return toast({
+        description: (
+          <p className="body-2 text-white">
+            <span className="font-semibold">{file.name}</span> File unshared
+            successful
+          </p>
+        ),
+        className: "success-toast",
+      });
+    }
+    closeAllModals();
+  };
 
   const renderDialogContent = () => {
     if (!action) return null;
