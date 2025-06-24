@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  DeleteFileProps,
   RenameFileProps,
   UpdateFileUsersProps,
   UploadFileProps,
@@ -152,29 +153,23 @@ export const updateFileUsers = async ({
 
 export const deleteFile = async ({
   fileId,
+  bucketFileId,
   path,
-}: {
-  fileId: string;
-  path: string;
-}) => {
+}: DeleteFileProps) => {
   const { databases, storage } = await createAdminClient();
 
   try {
-    const file = await databases.getDocument(
+    const deletedFile = await databases.deleteDocument(
       appwriteConfig.datebaseId,
       appwriteConfig.filesCollectionId,
       fileId
     );
 
-    await databases.deleteDocument(
-      appwriteConfig.datebaseId,
-      appwriteConfig.filesCollectionId,
-      fileId
-    );
-
-    await storage.deleteFile(appwriteConfig.bucket, file.bucketFileId);
+    if (deletedFile)
+      await storage.deleteFile(appwriteConfig.bucket, bucketFileId);
 
     revalidatePath(path);
+    return parseStringify({ status: "success" });
   } catch (error) {
     handleError(error, "Failed to delete file");
   }
