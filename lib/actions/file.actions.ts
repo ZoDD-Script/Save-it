@@ -124,6 +124,31 @@ export const renameFile = async ({
   }
 };
 
+export const updateFileUsers = async ({
+  fileId,
+  name,
+  extension,
+  path,
+}: RenameFileProps) => {
+  const { databases } = await createAdminClient();
+
+  try {
+    const newName = `${name}.${extension}`.toLowerCase();
+
+    const updatedFile = await databases.updateDocument(
+      appwriteConfig.datebaseId,
+      appwriteConfig.filesCollectionId,
+      fileId,
+      { name: newName }
+    );
+
+    revalidatePath(path);
+    return parseStringify(updatedFile);
+  } catch (error) {
+    handleError(error, "Failed to rename file");
+  }
+};
+
 export const deleteFile = async ({
   fileId,
   path,
