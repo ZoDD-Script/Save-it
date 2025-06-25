@@ -26,7 +26,7 @@ const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
 
   const result = await databases.listDocuments(
-    appwriteConfig.datebaseId,
+    appwriteConfig.databaseId,
     appwriteConfig.usersCollectionId,
     [Query.equal("email", [email])]
   );
@@ -62,7 +62,7 @@ export const createAccount = async ({
     const { databases } = await createAdminClient();
 
     await databases.createDocument(
-      appwriteConfig.datebaseId,
+      appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
       ID.unique(),
       {
@@ -108,7 +108,7 @@ export const getCurrentUser = async () => {
   const result = await account.get();
 
   const user = await databases.listDocuments(
-    appwriteConfig.datebaseId,
+    appwriteConfig.databaseId,
     appwriteConfig.usersCollectionId,
     [Query.equal("accountId", result.$id)]
   );
