@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import FileUploader from "./FileUploader";
 import { signOutUser } from "@/lib/actions/user.actions";
+import { Logo } from "./Logo";
 
 const MobileNavigation = ({
   $id: ownerId,
@@ -35,13 +36,14 @@ const MobileNavigation = ({
 
   return (
     <header className="mobile-header lg:hidden">
-      <Image
+      {/* <Image
         src="/assets/icons/logo.svg"
         alt="logo"
         width={120}
         height={62}
         className="h-auto"
-      />
+      /> */}
+      <Logo className="h-auto" text="text-2xl" />
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>

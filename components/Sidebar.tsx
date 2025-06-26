@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { Logo } from "./Logo";
 
 const Sidebar = ({
   fullName,
@@ -21,21 +22,23 @@ const Sidebar = ({
   return (
     <aside className="sidebar">
       <Link href="/">
-        <Image
+        {/* <Image
           src="/assets/icons/logo.svg"
           alt="logo"
           width={160}
           height={50}
           className="hidden h-auto lg:block"
-        />
+        /> */}
+        <Logo className="hidden h-auto lg:block" text="text-4xl" />
 
-        <Image
+        {/* <Image
           src="/assets/icons/logo.svg"
           alt="logo"
           width={52}
           height={52}
           className="lg:hidden"
-        />
+        /> */}
+        <Logo className="lg:hidden" text="text-4xl" />
       </Link>
 
       <nav className="sidebar-nav">
