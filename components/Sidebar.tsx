@@ -22,7 +22,7 @@ const Sidebar = ({
     <aside className="sidebar">
       <Link href="/">
         <Image
-          src="/assets/icons/logo-full-brand.svg"
+          src="/assets/icons/logo.svg"
           alt="logo"
           width={160}
           height={50}
@@ -30,7 +30,7 @@ const Sidebar = ({
         />
 
         <Image
-          src="/assets/icons/logo-brand.svg"
+          src="/assets/icons/logo.svg"
           alt="logo"
           width={52}
           height={52}
@@ -66,7 +66,7 @@ const Sidebar = ({
       </nav>
 
       <Image
-        src="/assets/images/files-2.png"
+        src="/assets/images/folder.png"
         alt="files"
         width={506}
         height={418}

@@ -54,21 +54,55 @@ const ActionsDropdown = ({ file }: { file: Models.Document }) => {
   const handleAction = async () => {
     if (!action) return;
     setIsLoading(true);
-    let success = false;
 
-    const actions = {
-      rename: () =>
-        renameFile({ fileId: file.$id, name, extension: file.extension, path }),
-      share: () => updateFileUsers({ fileId: file.$id, emails, path }),
-      delete: () =>
-        deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path }),
-    };
+    try {
+      const actions = {
+        rename: () =>
+          renameFile({
+            fileId: file.$id,
+            name,
+            extension: file.extension,
+            path,
+          }),
+        share: () => updateFileUsers({ fileId: file.$id, emails, path }),
+        delete: () =>
+          deleteFile({
+            fileId: file.$id,
+            bucketFileId: file.bucketFileId,
+            path,
+          }),
+      };
 
-    success = await actions[action.value as keyof typeof actions]();
+      const success = await actions[action.value as keyof typeof actions]();
 
-    if (success) closeAllModals();
-
-    setIsLoading(false);
+      if (success) {
+        toast({
+          description: (
+            <p className="body-2 text-white">
+              <span className="font-semibold">{file.name}</span>{" "}
+              {action.label.toLowerCase()} successful
+            </p>
+          ),
+          className: "success-toast",
+        });
+        closeAllModals();
+      } else {
+        toast({
+          description: `Failed to ${action.label.toLowerCase()} the file.`,
+          className: "error-toast",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        description: `Something went wrong while trying to ${action.label.toLowerCase()}.`,
+        className: "error-toast",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRemoveUser = async (email: string) => {

@@ -36,10 +36,10 @@ const MobileNavigation = ({
   return (
     <header className="mobile-header lg:hidden">
       <Image
-        src="/assets/icons/logo-full-brand.svg"
+        src="/assets/icons/logo.svg"
         alt="logo"
         width={120}
-        height={52}
+        height={62}
         className="h-auto"
       />
 
