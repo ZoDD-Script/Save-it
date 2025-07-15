@@ -14,6 +14,21 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
   const types = getFileTypesParams(type) as FileType[];
   const files = await getFiles({ types, searchText, sort });
 
+  function getReadableFileSize(totalBytes: number): string {
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    let i = 0;
+    while (totalBytes >= 1024 && i < units.length - 1) {
+      totalBytes /= 1024;
+      i++;
+    }
+    return `${totalBytes.toFixed(2)}${units[i]}`;
+  }
+
+  function sumFileSizes(files: { documents: { size: number }[] }) {
+    const totalBytes = files.documents.reduce((sum, doc) => sum + doc.size, 0);
+    return getReadableFileSize(totalBytes);
+  }
+
   return (
     <div className="page-container">
       <section className="w-full">
@@ -22,7 +37,7 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
         <div className="total-size-section">
           <p className="body-1">
             Total:
-            <span className="h5"> {"0 MB"}</span>
+            <span className="h5"> {sumFileSizes(files) || "0B"}</span>
           </p>
 
           <div className="sort-container">
